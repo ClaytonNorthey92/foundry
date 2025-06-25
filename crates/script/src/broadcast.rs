@@ -76,11 +76,7 @@ pub async fn send_transaction(
                         bail!("EOA nonce changed unexpectedly while sending transactions. Expected {tx_nonce} got {nonce} from provider.")
                     }
                     Ordering::Less => {
-                        if attempt == 4 {
-                            bail!("After 5 attempts, provider nonce ({nonce}) is still behind expected nonce ({tx_nonce}).")
-                        }
-                        warn!("Expected nonce ({tx_nonce}) is ahead of provider nonce ({nonce}). Retrying in 1 second...");
-                        tokio::time::sleep(std::time::Duration::from_millis(1000)).await;
+                        break;
                     }
                     Ordering::Equal => {
                         // Nonces are equal, we can proceed
