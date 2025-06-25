@@ -63,6 +63,7 @@ pub async fn send_transaction(
     is_fixed_gas_limit: bool,
     estimate_via_rpc: bool,
     estimate_multiplier: u64,
+    sender: Address, 
 ) -> Result<TxHash> {
     if let SendTransactionKind::Raw(tx, _) | SendTransactionKind::Unlocked(tx) = &mut kind {
         if sequential_broadcast {
@@ -369,6 +370,7 @@ impl BundledState {
                             *is_fixed_gas_limit,
                             estimate_via_rpc,
                             self.args.gas_estimate_multiplier,
+                            self.script_config.evm_opts.sender, 
                         );
                         pending_transactions.push(fut);
                     }
