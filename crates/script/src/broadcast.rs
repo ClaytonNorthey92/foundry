@@ -66,6 +66,9 @@ pub async fn send_transaction(
     sender: Address, 
 ) -> Result<TxHash> {
     if let SendTransactionKind::Raw(tx, _) | SendTransactionKind::Unlocked(tx) = &mut kind {
+
+        tx.from = Some(sender);
+
         if sequential_broadcast {
             let from = tx.from.expect("no sender");
 
