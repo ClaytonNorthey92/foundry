@@ -50,6 +50,10 @@ impl ScriptRunner {
         }
 
         let sender_nonce = script_config.sender_nonce;
+
+        let debug_string = format!("setting nonce for sender {}: {}", self.evm_opts.sender, sender_nonce);
+        trace!(target: "script", debug_string);
+        
         self.executor.set_nonce(self.evm_opts.sender, sender_nonce)?;
 
         // We max out their balance so that they can deploy and make calls.
