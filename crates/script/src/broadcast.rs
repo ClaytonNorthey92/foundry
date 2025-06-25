@@ -68,13 +68,14 @@ pub async fn send_transaction(
     if let SendTransactionKind::Raw(tx, _) | SendTransactionKind::Unlocked(tx) = &mut kind {
 
         tx.from = Some(sender);
+        let nonce = provider.get_transaction_count(tx.from.expect("no sender")).await?;
+        tx.nonce = Some(nonce);
 
         if sequential_broadcast {
             let from = tx.from.expect("no sender");
 
             let tx_nonce = tx.nonce.expect("no nonce");
             for attempt in 0..5 {
-                let nonce = provider.get_transaction_count(from).await?;
                 match nonce.cmp(&tx_nonce) {
                     Ordering::Greater => {
                         bail!("EOA nonce changed unexpectedly while sending transactions. Expected {tx_nonce} got {nonce} from provider.")
