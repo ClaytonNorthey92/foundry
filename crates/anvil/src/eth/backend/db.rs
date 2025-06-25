@@ -101,6 +101,8 @@ pub trait Db:
 
     /// Sets the nonce of the given address
     fn set_nonce(&mut self, address: Address, nonce: u64) -> DatabaseResult<()> {
+        let debug_string = format!("setting nonce for {} to {}", address, nonce);
+        trace!(target: "backend", debug_string);
         let mut info = self.basic(address)?.unwrap_or_default();
         info.nonce = nonce;
         self.insert_account(address, info);
